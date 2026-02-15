@@ -60,12 +60,20 @@ export default function AnalyzeResultPage() {
             Skill gap and learning roadmap with YouTube resources
           </p>
         </div>
-        <Link
-          href="/analyze"
-          className="rounded-full border border-border/60 bg-background/40 px-3 py-1.5 text-xs font-medium text-foreground/80 hover:bg-violet-500/5"
-        >
-          New analysis
-        </Link>
+        <div className="flex flex-wrap items-center gap-2">
+          <Link
+            href="/skill-videos"
+            className="rounded-full border border-violet-500/40 bg-violet-500/10 px-3 py-1.5 text-xs font-medium text-violet-200 hover:bg-violet-500/20"
+          >
+            Search skill videos
+          </Link>
+          <Link
+            href="/analyze"
+            className="rounded-full border border-border/60 bg-background/40 px-3 py-1.5 text-xs font-medium text-foreground/80 hover:bg-violet-500/5"
+          >
+            New analysis
+          </Link>
+        </div>
       </div>
 
       {/* Skill gap percentage */}

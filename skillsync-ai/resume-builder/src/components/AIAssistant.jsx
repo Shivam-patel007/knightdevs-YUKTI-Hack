@@ -12,8 +12,10 @@ export default function AIAssistant({ data, onUpdate }) {
   useEffect(() => {
     try {
       const stored = localStorage.getItem(STORAGE_KEY)
+      const envKey = (import.meta.env?.VITE_OPENROUTER_API_KEY || '').trim()
       if (stored) setApiKey(stored)
-      else setShowKey(true)
+      else if (!envKey) setShowKey(true)
+      // If env key is set, no need to show key input; API will use it
     } catch (_) {}
   }, [])
 
@@ -26,7 +28,8 @@ export default function AIAssistant({ data, onUpdate }) {
   }
 
   const update = (field, value) => onUpdate({ ...data, [field]: value })
-  const keyToUse = apiKey.trim() || undefined
+  const envKey = (import.meta.env?.VITE_OPENROUTER_API_KEY || '').trim()
+  const keyToUse = apiKey.trim() || envKey || undefined
 
   const handleGenerateSummary = async () => {
     setError('')
@@ -92,6 +95,9 @@ export default function AIAssistant({ data, onUpdate }) {
         >
           {showKey ? 'Hide' : 'Set'} OpenRouter API key
         </button>
+        {envKey && !apiKey.trim() && (
+          <p className="text-[10px] text-green-700 sm:text-xs">Using API key from .env</p>
+        )}
         {showKey && (
           <div className="space-y-1.5">
             <input

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { MouseFollowEffect } from "@/components/MouseFollowEffect";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -28,6 +29,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} app-grid-bg antialiased bg-background text-foreground`}
       >
+        <MouseFollowEffect />
         <div className="relative min-h-screen">
           <div className="relative z-10 flex min-h-screen flex-col">
             <main className="flex-1 px-4 py-6 sm:px-6 lg:px-10 lg:py-10">

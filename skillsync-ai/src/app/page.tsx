@@ -34,6 +34,18 @@ export default function Home() {
           >
             Resume Builder
           </Link>
+          <Link
+            href="/skill-videos"
+            className="rounded-full border border-border/60 bg-background/40 px-3 py-1.5 text-xs font-medium text-foreground/80 backdrop-blur-md transition hover:border-violet-500/70 hover:bg-violet-500/5 hover:text-foreground"
+          >
+            Skill videos
+          </Link>
+          <Link
+            href="/jobs"
+            className="rounded-full border border-border/60 bg-background/40 px-3 py-1.5 text-xs font-medium text-foreground/80 backdrop-blur-md transition hover:border-violet-500/70 hover:bg-violet-500/5 hover:text-foreground"
+          >
+            Job Portal
+          </Link>
         </nav>
       </header>
 

@@ -38,7 +38,7 @@ export async function callOpenRouter(prompt, userContent = '', apiKey = null) {
         { role: 'system', content: prompt },
         { role: 'user', content: userContent || 'Proceed.' },
       ],
-      max_tokens: 1024,
+      max_tokens: 900,
       temperature: 0.7,
     }),
   })

@@ -1,27 +1,27 @@
-import { Schema, model, models, Document } from "mongoose";
+import mongoose, { Schema, model, models } from "mongoose";
 
-export interface IUser extends Document {
+export interface IUser {
+  _id: mongoose.Types.ObjectId;
+  name: string;
   email: string;
-  resumeText: string;
-  skills: string[];
-  selectedRole: string;
-  matchScore: number;
-  roadmap: any;
+  password: string;
+  role: "user" | "admin";
+  savedJobs: string[];
+  resumeUrl?: string;
   createdAt: Date;
 }
 
 const UserSchema = new Schema<IUser>(
   {
-    email: { type: String, required: true },
-    resumeText: { type: String, required: true },
-    skills: { type: [String], default: [] },
-    selectedRole: { type: String, required: true },
-    matchScore: { type: Number, required: true },
-    roadmap: { type: Schema.Types.Mixed, required: true },
+    name: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
+    role: { type: String, enum: ["user", "admin"], default: "user" },
+    savedJobs: { type: [String], default: [] },
+    resumeUrl: { type: String },
+    createdAt: { type: Date, default: Date.now },
   },
-  {
-    timestamps: { createdAt: true, updatedAt: false },
-  },
+  { timestamps: true }
 );
 
-export const User = models.User || model<IUser>("User", UserSchema);
+export const User = models.User ?? model<IUser>("User", UserSchema);

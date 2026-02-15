@@ -37,7 +37,9 @@ export async function searchYouTubeForSkill(
       title: item.snippet.title,
       channel: item.snippet.channelTitle,
       url: `https://www.youtube.com/watch?v=${item.id.videoId}`,
-      thumbnail: item.snippet.thumbnails?.default?.url,
+      thumbnail:
+        (item.snippet.thumbnails as { medium?: { url?: string }; default?: { url?: string } })
+          ?.medium?.url ?? item.snippet.thumbnails?.default?.url,
       publishedAt: item.snippet.publishedAt,
     }));
   } catch (err) {
