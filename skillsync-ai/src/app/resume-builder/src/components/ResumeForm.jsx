@@ -118,6 +118,38 @@ export default function ResumeForm({ data, onChange }) {
                 placeholder="e.g. Senior Frontend Developer"
               />
             </div>
+            <div>
+              <label className="mb-1.5 flex items-center gap-2 text-sm text-white/70">
+                <span>🔗</span>
+                <span>LinkedIn profile (optional)</span>
+              </label>
+              <input
+                type="url"
+                value={data.personal?.linkedin ?? ''}
+                onChange={(e) => updatePersonal('linkedin', e.target.value)}
+                className={inputGlass}
+                placeholder="https://linkedin.com/in/yourprofile"
+              />
+              <p className="mt-1 text-xs text-white/50">
+                Your LinkedIn profile will appear as a clickable link on your resume
+              </p>
+            </div>
+            <div>
+              <label className="mb-1.5 flex items-center gap-2 text-sm text-white/70">
+                <span>💻</span>
+                <span>GitHub profile (optional)</span>
+              </label>
+              <input
+                type="url"
+                value={data.personal?.github ?? ''}
+                onChange={(e) => updatePersonal('github', e.target.value)}
+                className={inputGlass}
+                placeholder="https://github.com/yourusername"
+              />
+              <p className="mt-1 text-xs text-white/50">
+                Your GitHub profile will appear as a clickable link on your resume
+              </p>
+            </div>
           </div>
         </div>
       )}

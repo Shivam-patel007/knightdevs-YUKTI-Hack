@@ -34,11 +34,35 @@ export default function ResumePreview({ data }) {
               {personal.name || 'Your Name'}
             </h1>
             <div className="mt-1 flex flex-wrap gap-x-4 gap-y-0 text-sm text-gray-600">
-              {(personal.email || personal.phone || personal.location) ? (
+              {(personal.email || personal.phone || personal.location || personal.linkedin || personal.github) ? (
                 <>
                   {personal.email && <span>{personal.email}</span>}
                   {personal.phone && <span>{personal.phone}</span>}
                   {personal.location && <span>{personal.location}</span>}
+                  {personal.linkedin && (
+                    <a
+                      href={personal.linkedin}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 hover:underline"
+                      title="Open LinkedIn profile"
+                    >
+                      <span>🔗</span>
+                      <span>LinkedIn</span>
+                    </a>
+                  )}
+                  {personal.github && (
+                    <a
+                      href={personal.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 hover:underline"
+                      title="Open GitHub profile"
+                    >
+                      <span>💻</span>
+                      <span>GitHub</span>
+                    </a>
+                  )}
                 </>
               ) : (
                 <span className="text-gray-400">Email · Phone · Location</span>

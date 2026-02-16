@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ATS Resume Matcher | SkillSync</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0f0f12;
+      --surface: #18181c;
+      --border: #2a2a2e;
+      --text: #f4f4f5;
+      --text-muted: #a1a1aa;
+      --accent: #6366f1;
+      --accent-hover: #818cf8;
+      --success: #22c55e;
+      --warning: #eab308;
+      --error: #ef4444;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+    header h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    header p {
+      color: var(--text-muted);
+      margin-top: 0.5rem;
+      font-size: 0.95rem;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .card h2 {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.75rem;
+    }
+
+    label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+    textarea {
+      width: 100%;
+      min-height: 140px;
+      padding: 0.875rem 1rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.95rem;
+      resize: vertical;
+      transition: border-color 0.2s;
+    }
+    textarea::placeholder { color: var(--text-muted); }
+    textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .upload-zone {
+      border: 2px dashed var(--border);
+      border-radius: 10px;
+      padding: 2rem;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      background: var(--bg);
+    }
+    .upload-zone:hover, .upload-zone.dragover {
+      border-color: var(--accent);
+      background: rgba(99, 102, 241, 0.06);
+    }
+    .upload-zone input[type="file"] { display: none; }
+    .upload-zone .icon {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      opacity: 0.8;
+    }
+    .upload-zone .hint {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+    .upload-zone.has-file {
+      border-color: var(--success);
+      background: rgba(34, 197, 94, 0.08);
+    }
+    .upload-zone.has-file .filename {
+      color: var(--success);
+      font-weight: 500;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #fff;
+      background: var(--accent);
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+      width: 100%;
+      margin-top: 0.5rem;
+    }
+    .btn:hover:not(:disabled) { background: var(--accent-hover); }
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    .btn .spinner {
+      width: 1.25rem;
+      height: 1.25rem;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    #result-section { display: none; }
+    #result-section.visible { display: block; }
+
+    .score-ring {
+      width: 120px;
+      height: 120px;
+      margin: 0 auto 1rem;
+      border-radius: 50%;
+      background: conic-gradient(var(--accent) calc(var(--p) * 1%), var(--border) 0);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .score-ring-inner {
+      width: 92px;
+      height: 92px;
+      border-radius: 50%;
+      background: var(--surface);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.75rem;
+      font-weight: 700;
+    }
+    .score-label {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .skills-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .skill-tag {
+      padding: 0.35rem 0.65rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+    .skill-tag.jd { background: rgba(99, 102, 241, 0.2); color: #a5b4fc; }
+    .skill-tag.resume { background: rgba(34, 197, 94, 0.2); color: #86efac; }
+    .skill-tag.matched { background: rgba(34, 197, 94, 0.25); color: #86efac; }
+    .skill-tag.missing { background: rgba(239, 68, 68, 0.2); color: #fca5a5; }
+
+    .suggestions-list {
+      list-style: none;
+    }
+    .suggestions-list li {
+      padding: 0.5rem 0;
+      padding-left: 1.5rem;
+      position: relative;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+    .suggestions-list li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .error-msg {
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #fca5a5;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      display: none;
+    }
+    .error-msg.visible { display: block; }
+
+    .empty-state {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      padding: 0.5rem 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>ATS Resume Matcher</h1>
+      <p>Paste the job description and upload your resume to see how well you match and get improvement tips.</p>
+    </header>
+
+    <form id="form">
+      <div class="card">
+        <h2>Job description</h2>
+        <label for="jd">Paste the full job posting or key requirements</label>
+        <textarea id="jd" name="jobDescription" placeholder="e.g. We are looking for a Full Stack Developer with experience in React, Node.js, Express, MongoDB, and Docker. Knowledge of REST APIs and Git required..."></textarea>
+      </div>
+
+      <div class="card">
+        <h2>Your resume</h2>
+        <label>Upload your resume (PDF only)</label>
+        <div class="upload-zone" id="uploadZone">
+          <input type="file" id="resume" name="resume" accept=".pdf,application/pdf" required>
+          <div class="icon">📄</div>
+          <div class="filename" id="fileName">Drop PDF here or click to choose</div>
+          <div class="hint">Max 5MB • PDF with extractable text</div>
+        </div>
+        <button type="submit" class="btn" id="btn">
+          <span class="btn-text">Get ATS Score</span>
+        </button>
+        <div class="error-msg" id="errorMsg"></div>
+      </div>
+    </form>
+
+    <section id="result-section">
+      <div class="card">
+        <h2>Your ATS Score</h2>
+        <div class="score-ring" id="scoreRing" style="--p: 0">
+          <div class="score-ring-inner"><span id="scoreValue">0</span>%</div>
+        </div>
+        <p class="score-label">Based on skills found in the job description vs your resume</p>
+      </div>
+
+      <div class="card">
+        <h2>Skills in job description</h2>
+        <div class="skills-grid" id="jdSkills"></div>
+        <div class="empty-state" id="jdSkillsEmpty">None detected.</div>
+      </div>
+
+      <div class="card">
+        <h2>Skills in your resume</h2>
+        <div class="skills-grid" id="resumeSkills"></div>
+        <div class="empty-state" id="resumeSkillsEmpty">None detected.</div>
+      </div>
+
+      <div class="card">
+        <h2>Matched skills</h2>
+        <div class="skills-grid" id="matchedSkills"></div>
+        <div class="empty-state" id="matchedEmpty">No matches.</div>
+      </div>
+
+      <div class="card">
+        <h2>Missing (add these to improve)</h2>
+        <div class="skills-grid" id="missingSkills"></div>
+        <div class="empty-state" id="missingEmpty">None — you cover all listed skills.</div>
+      </div>
+
+      <div class="card">
+        <h2>Suggestions</h2>
+        <ul class="suggestions-list" id="suggestions"></ul>
+        <div class="empty-state" id="suggestionsEmpty">No suggestions. You're aligned with the JD.</div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const form = document.getElementById('form');
+    const uploadZone = document.getElementById('uploadZone');
+    const resumeInput = document.getElementById('resume');
+    const fileName = document.getElementById('fileName');
+    const btn = document.getElementById('btn');
+    const btnText = btn.querySelector('.btn-text');
+    const errorMsg = document.getElementById('errorMsg');
+    const resultSection = document.getElementById('result-section');
+
+    function showError(msg) {
+      errorMsg.textContent = msg;
+      errorMsg.classList.add('visible');
+    }
+    function hideError() {
+      errorMsg.classList.remove('visible');
+    }
+
+    uploadZone.addEventListener('click', () => resumeInput.click());
+    uploadZone.addEventListener('dragover', (e) => { e.preventDefault(); uploadZone.classList.add('dragover'); });
+    uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragover'));
+    uploadZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadZone.classList.remove('dragover');
+      const file = e.dataTransfer.files[0];
+      if (file && file.type === 'application/pdf') {
+        resumeInput.files = e.dataTransfer.files;
+        fileName.textContent = file.name;
+        uploadZone.classList.add('has-file');
+        hideError();
+      } else {
+        showError('Please drop a PDF file.');
+      }
+    });
+    resumeInput.addEventListener('change', () => {
+      const file = resumeInput.files[0];
+      if (file) {
+        fileName.textContent = file.name;
+        uploadZone.classList.add('has-file');
+        hideError();
+      } else {
+        fileName.textContent = 'Drop PDF here or click to choose';
+        uploadZone.classList.remove('has-file');
+      }
+    });
+
+    function renderTags(containerId, emptyId, items, className) {
+      const container = document.getElementById(containerId);
+      const emptyEl = document.getElementById(emptyId);
+      container.innerHTML = '';
+      if (!items || items.length === 0) {
+        emptyEl.style.display = 'block';
+        return;
+      }
+      emptyEl.style.display = 'none';
+      items.forEach(skill => {
+        const tag = document.createElement('span');
+        tag.className = 'skill-tag ' + className;
+        tag.textContent = skill;
+        container.appendChild(tag);
+      });
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      hideError();
+      const jd = document.getElementById('jd').value.trim();
+      if (!jd) {
+        showError('Please enter a job description.');
+        return;
+      }
+      if (!resumeInput.files || !resumeInput.files[0]) {
+        showError('Please upload your resume (PDF).');
+        return;
+      }
+
+      resultSection.classList.remove('visible');
+      btn.disabled = true;
+      btnText.innerHTML = '<span class="spinner"></span> Analyzing...';
+
+      const fd = new FormData();
+      fd.append('jobDescription', jd);
+      fd.append('resume', resumeInput.files[0]);
+
+      try {
+        const res = await fetch('/api/ats-match', { method: 'POST', body: fd });
+        const data = await res.json();
+
+        if (!res.ok) {
+          showError(data.error || 'Something went wrong.');
+          return;
+        }
+
+        const score = data.atsScore != null ? data.atsScore : 0;
+        document.getElementById('scoreRing').style.setProperty('--p', score);
+        document.getElementById('scoreValue').textContent = score;
+
+        renderTags('jdSkills', 'jdSkillsEmpty', data.jdSkills, 'jd');
+        renderTags('resumeSkills', 'resumeSkillsEmpty', data.resumeSkills, 'resume');
+        renderTags('matchedSkills', 'matchedEmpty', data.matchedSkills, 'matched');
+        renderTags('missingSkills', 'missingEmpty', data.missingSkills, 'missing');
+
+        const suggestionsEl = document.getElementById('suggestions');
+        const suggestionsEmpty = document.getElementById('suggestionsEmpty');
+        suggestionsEl.innerHTML = '';
+        if (data.improvementSuggestions && data.improvementSuggestions.length > 0) {
+          suggestionsEmpty.style.display = 'none';
+          data.improvementSuggestions.forEach(s => {
+            const li = document.createElement('li');
+            li.textContent = s;
+            suggestionsEl.appendChild(li);
+          });
+        } else {
+          suggestionsEmpty.style.display = 'block';
+        }
+
+        resultSection.classList.add('visible');
+        resultSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } catch (err) {
+        showError('Network error: ' + err.message);
+      } finally {
+        btn.disabled = false;
+        btnText.textContent = 'Get ATS Score';
+      }
+    });
+  </script>
+</body>
+</html>

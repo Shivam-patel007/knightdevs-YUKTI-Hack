@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "node -e \"try{require('fs').rmSync('.next/dev',{recursive:true,force:true})}catch(e){}\" && next dev",
     "dev:fresh": "node -e \"try{require('fs').rmSync('.next/dev',{recursive:true,force:true})}catch(e){}\" && next dev",
+    "ats-backend": "npm start --prefix ../backend",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",

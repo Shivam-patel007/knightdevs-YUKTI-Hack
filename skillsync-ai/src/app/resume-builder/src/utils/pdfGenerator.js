@@ -27,10 +27,39 @@ export function generateResumePDF(resume) {
   // Contact line
   doc.setFontSize(BODY_SIZE)
   doc.setFont(undefined, 'normal')
-  const contact = [personal.email, personal.phone, personal.location].filter(Boolean).join('  •  ')
-  if (contact) {
-    doc.text(contact, MARGIN, y)
-    y += LINE_HEIGHT + 4
+  const contactParts = [personal.email, personal.phone, personal.location].filter(Boolean)
+  if (contactParts.length > 0) {
+    let contactX = MARGIN
+    contactParts.forEach((part, i) => {
+      doc.text(part, contactX, y)
+      // Measure text width and add separator
+      const textWidth = doc.getTextWidth(part)
+      contactX += textWidth + 8
+      if (i < contactParts.length - 1) {
+        doc.text('•', contactX, y)
+        contactX += 6
+      }
+    })
+    y += LINE_HEIGHT
+  }
+  
+  // Social links (LinkedIn and GitHub) - as clickable links
+  if (personal.linkedin || personal.github) {
+    let linkX = MARGIN
+    doc.setTextColor(0, 102, 204) // Blue color for links
+    if (personal.linkedin) {
+      const linkWidth = doc.getTextWidth('LinkedIn')
+      doc.text('LinkedIn', linkX, y)
+      doc.link(linkX, y - 4, linkWidth, LINE_HEIGHT, { url: personal.linkedin })
+      linkX += linkWidth + 8
+    }
+    if (personal.github) {
+      const linkWidth = doc.getTextWidth('GitHub')
+      doc.text('GitHub', linkX, y)
+      doc.link(linkX, y - 4, linkWidth, LINE_HEIGHT, { url: personal.github })
+    }
+    doc.setTextColor(0, 0, 0) // Reset to black
+    y += LINE_HEIGHT + 2
   }
 
   // Summary

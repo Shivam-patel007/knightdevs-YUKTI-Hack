@@ -46,6 +46,30 @@ export default function Home() {
           >
             Job Portal
           </Link>
+          <Link
+            href="/ats-match"
+            className="rounded-full border border-border/60 bg-background/40 px-3 py-1.5 text-xs font-medium text-foreground/80 backdrop-blur-md transition hover:border-violet-500/70 hover:bg-violet-500/5 hover:text-foreground"
+          >
+            ATS Matcher
+          </Link>
+          <Link
+            href="/roadmap-from-jd"
+            className="rounded-full border border-border/60 bg-background/40 px-3 py-1.5 text-xs font-medium text-foreground/80 backdrop-blur-md transition hover:border-violet-500/70 hover:bg-violet-500/5 hover:text-foreground"
+          >
+            Roadmap from JD
+          </Link>
+          <Link
+            href="/resume-validation"
+            className="rounded-full border border-border/60 bg-background/40 px-3 py-1.5 text-xs font-medium text-foreground/80 backdrop-blur-md transition hover:border-violet-500/70 hover:bg-violet-500/5 hover:text-foreground"
+          >
+            Resume Validation
+          </Link>
+          <Link
+            href="/interview-from-jd"
+            className="rounded-full border border-border/60 bg-background/40 px-3 py-1.5 text-xs font-medium text-foreground/80 backdrop-blur-md transition hover:border-violet-500/70 hover:bg-violet-500/5 hover:text-foreground"
+          >
+            Interview Qs from JD
+          </Link>
         </nav>
       </header>
 
@@ -164,6 +188,123 @@ export default function Home() {
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Features section – all main product features */}
+      <section className="border-t border-border/40 pt-12">
+        <h2 className="mb-8 text-center text-2xl font-semibold tracking-tight text-foreground">
+          Everything you need to level up
+        </h2>
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <Link
+            href="/upload"
+            className="group rounded-2xl border border-border/40 bg-background/40 p-5 backdrop-blur transition hover:border-violet-500/50 hover:bg-violet-500/5"
+          >
+            <div className="mb-3 h-10 w-10 rounded-xl bg-gradient-to-br from-violet-500/80 to-violet-600/80 shadow-sm" />
+            <h3 className="mb-1.5 font-medium text-foreground group-hover:text-violet-400">
+              Upload & Roadmap
+            </h3>
+            <p className="text-xs text-muted-foreground">
+              Upload your resume and get a personalised 6‑month learning plan and skill gap analysis.
+            </p>
+          </Link>
+          <Link
+            href="/analyze"
+            className="group rounded-2xl border border-border/40 bg-background/40 p-5 backdrop-blur transition hover:border-violet-500/50 hover:bg-violet-500/5"
+          >
+            <div className="mb-3 h-10 w-10 rounded-xl bg-gradient-to-br from-fuchsia-500/80 to-fuchsia-600/80 shadow-sm" />
+            <h3 className="mb-1.5 font-medium text-foreground group-hover:text-violet-400">
+              Resume Analyzer
+            </h3>
+            <p className="text-xs text-muted-foreground">
+              Get AI-powered resume critique and ATS-friendly suggestions to improve your narrative.
+            </p>
+          </Link>
+          <Link
+            href="/resume-builder"
+            className="group rounded-2xl border border-border/40 bg-background/40 p-5 backdrop-blur transition hover:border-violet-500/50 hover:bg-violet-500/5"
+          >
+            <div className="mb-3 h-10 w-10 rounded-xl bg-gradient-to-br from-sky-500/80 to-sky-600/80 shadow-sm" />
+            <h3 className="mb-1.5 font-medium text-foreground group-hover:text-violet-400">
+              Resume Builder
+            </h3>
+            <p className="text-xs text-muted-foreground">
+              Create and export a professional resume with templates and easy editing.
+            </p>
+          </Link>
+          <Link
+            href="/skill-videos"
+            className="group rounded-2xl border border-border/40 bg-background/40 p-5 backdrop-blur transition hover:border-violet-500/50 hover:bg-violet-500/5"
+          >
+            <div className="mb-3 h-10 w-10 rounded-xl bg-gradient-to-br from-rose-500/80 to-rose-600/80 shadow-sm" />
+            <h3 className="mb-1.5 font-medium text-foreground group-hover:text-violet-400">
+              Skill Videos
+            </h3>
+            <p className="text-xs text-muted-foreground">
+              Curated video recommendations to learn the skills you need for your target role.
+            </p>
+          </Link>
+          <Link
+            href="/jobs"
+            className="group rounded-2xl border border-border/40 bg-background/40 p-5 backdrop-blur transition hover:border-violet-500/50 hover:bg-violet-500/5"
+          >
+            <div className="mb-3 h-10 w-10 rounded-xl bg-gradient-to-br from-emerald-500/80 to-emerald-600/80 shadow-sm" />
+            <h3 className="mb-1.5 font-medium text-foreground group-hover:text-violet-400">
+              Job Portal
+            </h3>
+            <p className="text-xs text-muted-foreground">
+              Search and apply for jobs matched to your skills and target role.
+            </p>
+          </Link>
+          <Link
+            href="/ats-match"
+            className="group rounded-2xl border border-border/40 bg-background/40 p-5 backdrop-blur transition hover:border-violet-500/50 hover:bg-violet-500/5"
+          >
+            <div className="mb-3 h-10 w-10 rounded-xl bg-gradient-to-br from-amber-500/80 to-orange-500/80 shadow-sm" />
+            <h3 className="mb-1.5 font-medium text-foreground group-hover:text-violet-400">
+              ATS Resume Matcher
+            </h3>
+            <p className="text-xs text-muted-foreground">
+              Match your resume to any job description and see your ATS score, missing skills, and suggestions.
+            </p>
+          </Link>
+          <Link
+            href="/roadmap-from-jd"
+            className="group rounded-2xl border border-border/40 bg-background/40 p-5 backdrop-blur transition hover:border-violet-500/50 hover:bg-violet-500/5"
+          >
+            <div className="mb-3 h-10 w-10 rounded-xl bg-gradient-to-br from-indigo-500/80 to-violet-500/80 shadow-sm" />
+            <h3 className="mb-1.5 font-medium text-foreground group-hover:text-violet-400">
+              Roadmap from JD
+            </h3>
+            <p className="text-xs text-muted-foreground">
+              Generate a structured learning roadmap from a target job description using AI (OpenRouter).
+            </p>
+          </Link>
+          <Link
+            href="/resume-validation"
+            className="group rounded-2xl border border-border/40 bg-background/40 p-5 backdrop-blur transition hover:border-violet-500/50 hover:bg-violet-500/5"
+          >
+            <div className="mb-3 h-10 w-10 rounded-xl bg-gradient-to-br from-teal-500/80 to-cyan-500/80 shadow-sm" />
+            <h3 className="mb-1.5 font-medium text-foreground group-hover:text-violet-400">
+              Resume Validation
+            </h3>
+            <p className="text-xs text-muted-foreground">
+              Prove ATS scoring: match your resume against 3 fixed jobs and see score and missing skills per role.
+            </p>
+          </Link>
+          <Link
+            href="/interview-from-jd"
+            className="group rounded-2xl border border-border/40 bg-background/40 p-5 backdrop-blur transition hover:border-violet-500/50 hover:bg-violet-500/5"
+          >
+            <div className="mb-3 h-10 w-10 rounded-xl bg-gradient-to-br from-indigo-500/80 to-sky-500/80 shadow-sm" />
+            <h3 className="mb-1.5 font-medium text-foreground group-hover:text-violet-400">
+              Interview Qs from JD
+            </h3>
+            <p className="text-xs text-muted-foreground">
+              Generate tailored interview preparation questions directly from a job description using AI.
+            </p>
+          </Link>
         </div>
       </section>
     </div>

@@ -4,12 +4,14 @@ const STEPS = [
   { id: 'personal', label: 'Personal', icon: '👤' },
   { id: 'experience', label: 'Experience', icon: '💼' },
   { id: 'education', label: 'Education', icon: '🎓' },
+  { id: 'projects', label: 'Projects', icon: '🚀' },
   { id: 'skills', label: 'Skills', icon: '⚡' },
   { id: 'summary', label: 'Summary', icon: '📝' },
 ]
 
 const emptyExperience = () => ({ title: '', company: '', start: '', end: '', description: '' })
 const emptyEducation = () => ({ degree: '', school: '', field: '', start: '', end: '' })
+const emptyProject = () => ({ title: '', description: '', linkedin: '', github: '' })
 
 export default function ResumeForm({ data, onChange }) {
   const [step, setStep] = useState(0)
@@ -33,6 +35,14 @@ export default function ResumeForm({ data, onChange }) {
   }
   const addEducation = () => update('education', [...(data.education || []), emptyEducation()])
   const removeEducation = (i) => update('education', data.education.filter((_, j) => j !== i))
+  const updateProject = (index, field, value) => {
+    const next = [...(data.projects || [])]
+    if (!next[index]) next[index] = emptyProject()
+    next[index] = { ...next[index], [field]: value }
+    update('projects', next)
+  }
+  const addProject = () => update('projects', [...(data.projects || []), emptyProject()])
+  const removeProject = (i) => update('projects', data.projects.filter((_, j) => j !== i))
   const updateSkills = (value) => {
     const list = typeof value === 'string' ? value.split(',').map((s) => s.trim()).filter(Boolean) : value
     update('skills', list)
@@ -68,23 +78,85 @@ export default function ResumeForm({ data, onChange }) {
           <div className="grid gap-4 md:grid-cols-2">
             <div>
               <label className="mb-1.5 block text-sm text-white/70">Full name</label>
-              <input type="text" value={data.personal?.name ?? ''} onChange={(e) => updatePersonal('name', e.target.value)} className={inputGlass} placeholder="Jane Doe" />
+              <input
+                type="text"
+                value={data.personal?.name ?? ''}
+                onChange={(e) => updatePersonal('name', e.target.value)}
+                className={inputGlass}
+                placeholder="Jane Doe"
+              />
             </div>
             <div>
               <label className="mb-1.5 block text-sm text-white/70">Email</label>
-              <input type="email" value={data.personal?.email ?? ''} onChange={(e) => updatePersonal('email', e.target.value)} className={inputGlass} placeholder="jane@example.com" />
+              <input
+                type="email"
+                value={data.personal?.email ?? ''}
+                onChange={(e) => updatePersonal('email', e.target.value)}
+                className={inputGlass}
+                placeholder="jane@example.com"
+              />
             </div>
             <div>
               <label className="mb-1.5 block text-sm text-white/70">Phone</label>
-              <input type="tel" value={data.personal?.phone ?? ''} onChange={(e) => updatePersonal('phone', e.target.value)} className={inputGlass} placeholder="+1 234 567 8900" />
+              <input
+                type="tel"
+                value={data.personal?.phone ?? ''}
+                onChange={(e) => updatePersonal('phone', e.target.value)}
+                className={inputGlass}
+                placeholder="+1 234 567 8900"
+              />
             </div>
             <div>
               <label className="mb-1.5 block text-sm text-white/70">Location</label>
-              <input type="text" value={data.personal?.location ?? ''} onChange={(e) => updatePersonal('location', e.target.value)} className={inputGlass} placeholder="City, Country" />
+              <input
+                type="text"
+                value={data.personal?.location ?? ''}
+                onChange={(e) => updatePersonal('location', e.target.value)}
+                className={inputGlass}
+                placeholder="City, Country"
+              />
             </div>
             <div className="md:col-span-2">
               <label className="mb-1.5 block text-sm text-white/70">Target role (optional)</label>
-              <input type="text" value={data.personal?.targetRole ?? ''} onChange={(e) => updatePersonal('targetRole', e.target.value)} className={inputGlass} placeholder="e.g. Senior Frontend Developer" />
+              <input
+                type="text"
+                value={data.personal?.targetRole ?? ''}
+                onChange={(e) => updatePersonal('targetRole', e.target.value)}
+                className={inputGlass}
+                placeholder="e.g. Senior Frontend Developer"
+              />
+            </div>
+            <div>
+              <label className="mb-1.5 flex items-center gap-2 text-sm text-white/70">
+                <span>🔗</span>
+                <span>LinkedIn profile (optional)</span>
+              </label>
+              <input
+                type="url"
+                value={data.personal?.linkedin ?? ''}
+                onChange={(e) => updatePersonal('linkedin', e.target.value)}
+                className={inputGlass}
+                placeholder="https://linkedin.com/in/yourprofile"
+              />
+              <p className="mt-1 text-xs text-white/50">
+                Your LinkedIn profile will appear as a clickable link on your resume.
+              </p>
+            </div>
+            <div>
+              <label className="mb-1.5 flex items-center gap-2 text-sm text-white/70">
+                <span>💻</span>
+                <span>GitHub profile (optional)</span>
+              </label>
+              <input
+                type="url"
+                value={data.personal?.github ?? ''}
+                onChange={(e) => updatePersonal('github', e.target.value)}
+                className={inputGlass}
+                placeholder="https://github.com/yourusername"
+              />
+              <p className="mt-1 text-xs text-white/50">
+                Your GitHub profile will appear as a clickable link on your resume.
+              </p>
             </div>
           </div>
         </div>
@@ -142,6 +214,78 @@ export default function ResumeForm({ data, onChange }) {
                     <div className="flex-1"><label className="mb-1.5 block text-sm text-white/70">Start</label><input type="text" value={edu.start} onChange={(e) => updateEducation(i, 'start', e.target.value)} className={inputGlass} placeholder="2016" /></div>
                     <div className="flex-1"><label className="mb-1.5 block text-sm text-white/70">End</label><input type="text" value={edu.end} onChange={(e) => updateEducation(i, 'end', e.target.value)} className={inputGlass} placeholder="2020" /></div>
                   </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {currentStepId === 'projects' && (
+        <div className="space-y-5">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-semibold text-white">Projects</h2>
+            <button type="button" onClick={addProject} className="rounded-xl border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white transition hover:bg-white/20">+ Add</button>
+          </div>
+          <div className="space-y-6">
+            {(data.projects?.length ? data.projects : [emptyProject()]).map((proj, i) => (
+              <div key={i} className="rounded-2xl border border-white/15 bg-white/5 p-5 backdrop-blur-xl">
+                <div className="mb-4 flex justify-end">
+                  {data.projects?.length > 1 && (
+                    <button type="button" onClick={() => removeProject(i)} className="text-sm text-red-300 hover:text-red-200">Remove</button>
+                  )}
+                </div>
+                <div className="space-y-4">
+                  <div>
+                    <label className="mb-1.5 block text-sm text-white/70">Project title</label>
+                    <input
+                      type="text"
+                      value={proj.title}
+                      onChange={(e) => updateProject(i, 'title', e.target.value)}
+                      className={inputGlass}
+                      placeholder="E-commerce Platform"
+                    />
+                  </div>
+                  <div>
+                    <label className="mb-1.5 block text-sm text-white/70">Project description</label>
+                    <textarea
+                      value={proj.description}
+                      onChange={(e) => updateProject(i, 'description', e.target.value)}
+                      className={`${inputGlass} min-h-[100px] resize-y`}
+                      placeholder="Built a full-stack e-commerce platform with React and Node.js..."
+                    />
+                  </div>
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div>
+                      <label className="mb-1.5 flex items-center gap-2 text-sm text-white/70">
+                        <span>🔗</span>
+                        <span>LinkedIn link (optional)</span>
+                      </label>
+                      <input
+                        type="url"
+                        value={proj.linkedin ?? ''}
+                        onChange={(e) => updateProject(i, 'linkedin', e.target.value)}
+                        className={inputGlass}
+                        placeholder="https://linkedin.com/posts/..."
+                      />
+                    </div>
+                    <div>
+                      <label className="mb-1.5 flex items-center gap-2 text-sm text-white/70">
+                        <span>💻</span>
+                        <span>GitHub link (optional)</span>
+                      </label>
+                      <input
+                        type="url"
+                        value={proj.github ?? ''}
+                        onChange={(e) => updateProject(i, 'github', e.target.value)}
+                        className={inputGlass}
+                        placeholder="https://github.com/user/repo"
+                      />
+                    </div>
+                  </div>
+                  <p className="text-xs text-white/50">
+                    Project links will appear as clickable links in your resume PDF.
+                  </p>
                 </div>
               </div>
             ))}

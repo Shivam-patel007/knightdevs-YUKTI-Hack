@@ -17,13 +17,15 @@ function downloadBlob(blob, filename) {
 
 /** Build plain text from resume data */
 function resumeToText(resume) {
-  const { personal = {}, experience = [], education = [], skills = [], summary = '' } = resume
+  const { personal = {}, experience = [], education = [], projects = [], skills = [], summary = '' } = resume
   const skillsList = Array.isArray(skills) ? skills : (skills ? [skills] : [])
   const lines = []
 
   lines.push(personal.name || 'Your Name')
   const contact = [personal.email, personal.phone, personal.location].filter(Boolean).join('  |  ')
   if (contact) lines.push(contact)
+  if (personal.linkedin) lines.push(`LinkedIn: ${personal.linkedin}`)
+  if (personal.github) lines.push(`GitHub: ${personal.github}`)
   lines.push('')
 
   if (summary) {
@@ -52,6 +54,17 @@ function resumeToText(resume) {
     }
   }
 
+  if (projects?.length) {
+    lines.push('PROJECTS')
+    for (const proj of projects) {
+      lines.push(proj.title || 'Project')
+      if (proj.description) lines.push(proj.description)
+      if (proj.linkedin) lines.push(`LinkedIn: ${proj.linkedin}`)
+      if (proj.github) lines.push(`GitHub: ${proj.github}`)
+      lines.push('')
+    }
+  }
+
   if (skillsList.length) {
     lines.push('SKILLS')
     lines.push(skillsList.join(', '))
@@ -62,7 +75,7 @@ function resumeToText(resume) {
 
 /** Build HTML string from resume data */
 function resumeToHTML(resume) {
-  const { personal = {}, experience = [], education = [], skills = [], summary = '' } = resume
+  const { personal = {}, experience = [], education = [], projects = [], skills = [], summary = '' } = resume
   const skillsList = Array.isArray(skills) ? skills : (skills ? [skills] : [])
 
   let html = `<!DOCTYPE html>
@@ -81,7 +94,7 @@ p,ul{margin:0.25rem 0;}
 </head>
 <body>
 <h1>${(personal.name || 'Your Name').replace(/</g, '&lt;')}</h1>
-<div class="contact">${[personal.email, personal.phone, personal.location].filter(Boolean).map(s => String(s).replace(/</g, '&lt;')).join(' &bull; ')}</div>
+<div class="contact">${[personal.email, personal.phone, personal.location].filter(Boolean).map(s => String(s).replace(/</g, '&lt;')).join(' &bull; ')}${personal.linkedin ? ` &bull; <a href="${personal.linkedin.replace(/"/g, '&quot;')}" target="_blank">LinkedIn</a>` : ''}${personal.github ? ` &bull; <a href="${personal.github.replace(/"/g, '&quot;')}" target="_blank">GitHub</a>` : ''}</div>
 `
   if (summary) {
     html += `<h2>Summary</h2><p>${String(summary).replace(/</g, '&lt;').replace(/\n/g, '<br>')}</p>\n`
@@ -109,6 +122,20 @@ p,ul{margin:0.25rem 0;}
       html += `<div class="job"><div class="job-title">${degree}${field ? ` in ${field}` : ''}</div><div class="job-meta">${school}${meta ? ` &middot; ${meta}` : ''}</div></div>\n`
     }
   }
+  if (projects?.length) {
+    html += '<h2>Projects</h2>\n'
+    for (const proj of projects) {
+      const title = (proj.title || '').replace(/</g, '&lt;')
+      const desc = (proj.description || '').replace(/</g, '&lt;').replace(/\n/g, '<br>')
+      html += `<div class="job"><div class="job-title">${title}</div>`
+      if (desc) html += `<p>${desc}</p>`
+      const links = []
+      if (proj.linkedin) links.push(`<a href="${proj.linkedin.replace(/"/g, '&quot;')}" target="_blank">LinkedIn</a>`)
+      if (proj.github) links.push(`<a href="${proj.github.replace(/"/g, '&quot;')}" target="_blank">GitHub</a>`)
+      if (links.length) html += `<div class="job-meta">${links.join(' &bull; ')}</div>`
+      html += '</div>\n'
+    }
+  }
   if (skillsList.length) {
     html += '<h2>Skills</h2><p>' + skillsList.map(s => String(s).replace(/</g, '&lt;')).join(', ') + '</p>\n'
   }
@@ -134,7 +161,7 @@ export function downloadResumeHTML(resume) {
 
 /** Build and download DOCX (Word) */
 export async function downloadResumeDOCX(resume) {
-  const { personal = {}, experience = [], education = [], skills = [], summary = '' } = resume
+  const { personal = {}, experience = [], education = [], projects = [], skills = [], summary = '' } = resume
   const skillsList = Array.isArray(skills) ? skills : (skills ? [skills] : [])
 
   const children = []
@@ -142,6 +169,22 @@ export async function downloadResumeDOCX(resume) {
   children.push(new Paragraph({ text: personal.name || 'Your Name', heading: HeadingLevel.TITLE }))
   const contact = [personal.email, personal.phone, personal.location].filter(Boolean).join('  •  ')
   if (contact) children.push(new Paragraph(contact))
+  if (personal.linkedin) {
+    children.push(new Paragraph({
+      children: [
+        new TextRun({ text: 'LinkedIn: ', bold: false }),
+        new TextRun({ text: personal.linkedin, link: personal.linkedin, color: '0066CC' })
+      ]
+    }))
+  }
+  if (personal.github) {
+    children.push(new Paragraph({
+      children: [
+        new TextRun({ text: 'GitHub: ', bold: false }),
+        new TextRun({ text: personal.github, link: personal.github, color: '0066CC' })
+      ]
+    }))
+  }
 
   if (summary) {
     children.push(new Paragraph({ text: 'Summary', heading: HeadingLevel.HEADING_2 }))
@@ -164,6 +207,25 @@ export async function downloadResumeDOCX(resume) {
       children.push(new Paragraph({ children: [new TextRun({ text: `${edu.degree}${edu.field ? ` in ${edu.field}` : ''}`, bold: true })] }))
       if (edu.school) children.push(new Paragraph(edu.school))
       if (edu.start || edu.end) children.push(new Paragraph(`${edu.start || ''} – ${edu.end || ''}`))
+    }
+  }
+
+  if (projects?.length) {
+    children.push(new Paragraph({ text: 'Projects', heading: HeadingLevel.HEADING_2 }))
+    for (const proj of projects) {
+      children.push(new Paragraph({ children: [new TextRun({ text: proj.title || 'Project', bold: true })] }))
+      if (proj.description) children.push(new Paragraph(proj.description))
+      const linkRuns = []
+      if (proj.linkedin) {
+        linkRuns.push(new TextRun({ text: 'LinkedIn: ', bold: false }))
+        linkRuns.push(new TextRun({ text: proj.linkedin, link: proj.linkedin, color: '0066CC' }))
+      }
+      if (proj.github) {
+        if (linkRuns.length) linkRuns.push(new TextRun({ text: '  •  ', bold: false }))
+        linkRuns.push(new TextRun({ text: 'GitHub: ', bold: false }))
+        linkRuns.push(new TextRun({ text: proj.github, link: proj.github, color: '0066CC' }))
+      }
+      if (linkRuns.length) children.push(new Paragraph({ children: linkRuns }))
     }
   }
 

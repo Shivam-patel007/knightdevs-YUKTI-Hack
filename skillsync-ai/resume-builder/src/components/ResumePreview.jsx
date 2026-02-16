@@ -10,7 +10,7 @@ const FORMATS = [
 
 export default function ResumePreview({ data }) {
   const [downloading, setDownloading] = useState(null)
-  const { personal = {}, experience = [], education = [], skills = [], summary = '' } = data
+  const { personal = {}, experience = [], education = [], projects = [], skills = [], summary = '' } = data
   const skillsList = Array.isArray(skills) ? skills : (skills ? [skills] : [])
 
   const handleDownload = async (format) => {
@@ -49,9 +49,37 @@ export default function ResumePreview({ data }) {
         <article className="mx-auto max-w-[21cm] rounded-2xl border border-white/10 bg-white/90 p-6 text-gray-800 shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_4px_24px_rgba(0,0,0,0.06)] backdrop-blur-sm md:p-8">
           <header className="border-b border-gray-200 pb-4">
             <h1 className="text-2xl font-bold tracking-tight text-gray-900">{personal.name || 'Your Name'}</h1>
-            <div className="mt-1 flex flex-wrap gap-x-4 gap-y-0 text-sm text-gray-600">
-              {(personal.email || personal.phone || personal.location) ? (
-                <>{personal.email && <span>{personal.email}</span>}{personal.phone && <span>{personal.phone}</span>}{personal.location && <span>{personal.location}</span>}</>
+            <div className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-sm text-gray-600">
+              {(personal.email || personal.phone || personal.location || personal.linkedin || personal.github) ? (
+                <>
+                  {personal.email && <span>{personal.email}</span>}
+                  {personal.phone && <span>{personal.phone}</span>}
+                  {personal.location && <span>{personal.location}</span>}
+                  {personal.linkedin && (
+                    <a
+                      href={personal.linkedin}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 hover:underline"
+                      title="Open LinkedIn profile"
+                    >
+                      <span>🔗</span>
+                      <span>LinkedIn</span>
+                    </a>
+                  )}
+                  {personal.github && (
+                    <a
+                      href={personal.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 hover:underline"
+                      title="Open GitHub profile"
+                    >
+                      <span>💻</span>
+                      <span>GitHub</span>
+                    </a>
+                  )}
+                </>
               ) : (
                 <span className="text-gray-400">Email · Phone · Location</span>
               )}
@@ -90,6 +118,49 @@ export default function ResumePreview({ data }) {
                 </div>
               )) : (
                 <p className="text-sm text-gray-400 italic">Add education in the form. Degree, school, and dates will show here.</p>
+              )}
+            </div>
+          </section>
+          <section className="mt-6">
+            <h2 className="text-xs font-semibold uppercase tracking-wider text-gray-500">Projects</h2>
+            <div className="mt-3 space-y-4">
+              {projects?.length > 0 ? projects.map((proj, i) => (
+                <div key={i}>
+                  <h3 className="font-semibold text-gray-900">{proj.title || 'Project Title'}</h3>
+                  {proj.description && (
+                    <p className="mt-1 whitespace-pre-line text-sm leading-relaxed text-gray-700">{proj.description}</p>
+                  )}
+                  {(proj.linkedin || proj.github) && (
+                    <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs">
+                      {proj.linkedin && (
+                        <a
+                          href={proj.linkedin}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 hover:underline"
+                          title="Open LinkedIn post"
+                        >
+                          <span>🔗</span>
+                          <span>LinkedIn</span>
+                        </a>
+                      )}
+                      {proj.github && (
+                        <a
+                          href={proj.github}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 hover:underline"
+                          title="Open GitHub repository"
+                        >
+                          <span>💻</span>
+                          <span>GitHub</span>
+                        </a>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )) : (
+                <p className="text-sm text-gray-400 italic">Add projects in the form. Project title, description, and links will show here.</p>
               )}
             </div>
           </section>
