@@ -2,13 +2,13 @@
   "name": "skillsync-ai-root",
   "private": true,
   "scripts": {
-    "dev": "npm --prefix ./skillsync-ai run dev",
-    "dev:fresh": "npm --prefix ./skillsync-ai run dev:fresh",
-    "build": "npm --prefix ./skillsync-ai run build",
-    "start": "npm --prefix ./skillsync-ai run start",
-    "lint": "npm --prefix ./skillsync-ai run lint",
-    "dev:resume": "npm --prefix ./skillsync-ai/resume-builder run dev",
-    "build:resume": "npm --prefix ./skillsync-ai/resume-builder run build",
-    "preview:resume": "npm --prefix ./skillsync-ai/resume-builder run preview"
+    "dev": "npm --prefix ./frontend/skillsync-ai run dev",
+    "dev:fresh": "npm --prefix ./frontend/skillsync-ai run dev:fresh",
+    "build": "npm --prefix ./frontend/skillsync-ai run build",
+    "start": "npm --prefix ./frontend/skillsync-ai run start",
+    "lint": "npm --prefix ./frontend/skillsync-ai run lint",
+    "dev:resume": "npm --prefix ./frontend/resume-builder run dev",
+    "build:resume": "npm --prefix ./frontend/resume-builder run build",
+    "preview:resume": "npm --prefix ./frontend/resume-builder run preview"
   }
 }

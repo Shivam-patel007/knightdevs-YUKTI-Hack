@@ -6,13 +6,13 @@ Both must be running for the ATS Matcher to work.
 
 **Option A – from project root:**
 ```bash
-cd "SkillSync Ai\backend"
+cd backend
 npm start
 ```
 
-**Option B – from skillsync-ai folder:**
+**Option B – from frontend folder:**
 ```bash
-cd skillsync-ai
+cd frontend/skillsync-ai
 npm run ats-backend
 ```
 
@@ -22,7 +22,7 @@ Leave this terminal **open**. You should see: `ATS Backend running at http://loc
 
 In a **second terminal**:
 ```bash
-cd "SkillSync Ai\skillsync-ai"
+cd frontend/skillsync-ai
 npm run dev
 ```
 

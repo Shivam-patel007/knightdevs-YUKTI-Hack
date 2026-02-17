@@ -3,7 +3,7 @@ Write-Host "Stopping Node processes..." -ForegroundColor Yellow
 taskkill /F /IM node.exe 2>$null
 Start-Sleep -Seconds 2
 
-$nextDir = "skillsync-ai\.next"
+$nextDir = "frontend\skillsync-ai\.next"
 if (Test-Path $nextDir) {
   Write-Host "Removing .next folder..." -ForegroundColor Yellow
   Remove-Item -Path $nextDir -Recurse -Force -ErrorAction SilentlyContinue
